@@ -1,0 +1,11 @@
+html, body {
+    @apply h-full min-h-full;
+}
+
+.content {
+    @apply min-h-full;
+}
+
+::selection {
+    @apply bg-blue-lighter;
+}
