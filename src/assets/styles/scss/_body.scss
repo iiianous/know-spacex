@@ -1,11 +1,29 @@
+:root {
+    --primary-color: #181818;
+    --secondary-color: #212121;
+    --font-color: #eee;
+    --border-color: #333333;
+}
+
 html, body {
     @apply h-full min-h-full;
 }
 
-.content {
-    @apply min-h-full;
+body {
+    line-height: 1.5;
+    font-size: 17px;
+    background: var(--secondary-color);
+    color: var(--font-color);
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    color: var(--font-color);
 }
 
 ::selection {
     @apply bg-blue-lighter;
+}
+
+.content {
+    @apply min-h-full;
 }

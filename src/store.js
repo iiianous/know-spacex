@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import { get, filter, head } from 'lodash'
+import get from 'lodash/get'
+import filter from 'lodash/filter'
+import head from 'lodash/head'
 
 Vue.use(Vuex)
 
@@ -9,12 +11,14 @@ export default new Vuex.Store({
   state: {
     all_flights: [],
     current: {},
-    video: ''
+    video: '',
+
+    first_stage: []
   },
 
   getters: {
-    getAllFlights: (state) => { return state.all_flights },
-    getCurrent: (state) => { return state.current },
+    getAllFlights: (state) => state.all_flights,
+    getCurrent: (state) => state.current,
     getVideo: state => state.video,
   },
 
@@ -33,32 +37,21 @@ export default new Vuex.Store({
   },
 
   actions: {
-    fetchData() {
+    async fetchData({commit}) {
       let apiUrl = 'https://api.spacexdata.com/v2/launches'
 
-      axios.get( apiUrl )
-        .then( ( { data } ) => {
-          console.log(data)
-          this.commit('FETCH_DATA', data)
-        })
-        .catch( error => {
-          console.log( new Error('Error', error.message ) )
-        })
+      try {
+        const { data } = await axios.get( apiUrl )
+        commit('FETCH_DATA', data)
+      } catch (error) { }
     },
 
-    findFlighNumber( {state, commit}, payload ) {
-      console.log( 'PAYLOAD', payload  )
+    findFlightNumber( {state, commit}, payload ) {
+      const result = filter( state.all_flights, (item) => item.flight_number == payload);
 
-      let result = filter( state.all_flights, function(o) { 
-        return o.flight_number == payload; 
-      });
-
-      console.log( 'RESULT:', head(result) )
-      let {links} = result
-      // console.log( 'LINKS:', get( head(result), ['links', 'video_link'] ) )
-      commit('SET_CURRENT',  head(result))
-      commit('SET_VIDEO', get( head(result), ['links', 'video_link'] ) )
-      // console.log( 'ALL FLIGHTS', state.all_flights  )
+      const { links } = result
+      commit('SET_CURRENT', head(result))
+      commit('SET_VIDEO', get( head(result), ['links', 'youtube_id'] ) )
     }
   }
 })

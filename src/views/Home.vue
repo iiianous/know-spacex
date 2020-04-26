@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <TheFold />
+    <router-view></router-view>
   </div>
 </template>
 
@@ -12,16 +12,18 @@
 
 <script>
 // @ is an alias to /src
-import TheFold from '@/components/TheFold.vue'
-
 export default {
-  name: 'home',
-  components: {
-    TheFold,
+  name: 'Home',
+
+  created() {
+    let value = this.getRandomNumber();
+    this.$router.push({ path: `/video/${value}`});
   },
 
   methods: {
-
+    getRandomNumber() {
+      return Math.floor((Math.random() * 10) + 1);
+    },
   }
 }
 </script>
